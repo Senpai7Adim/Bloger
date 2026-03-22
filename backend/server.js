@@ -66,7 +66,11 @@ app.use((err, req, res, next) => {
 });
 
 // ─── Démarrage ───────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
-  console.log(`📚 Swagger UI disponible sur http://localhost:${PORT}/api-docs`);
-});
+if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+    console.log(`📚 Swagger UI disponible sur http://localhost:${PORT}/api-docs`);
+  });
+}
+
+export default app;
