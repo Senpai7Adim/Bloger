@@ -7,6 +7,17 @@ import api from '../utils/api';
 const Home = () => {
   const [featuredArticles, setFeaturedArticles] = useState([]);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     // Fetch latest 3 articles
     const fetchArticles = async () => {
@@ -24,9 +35,11 @@ const Home = () => {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Spline Background */}
-        <div className="absolute inset-0 w-full h-full">
-          <Spline scene="https://prod.spline.design/Q2XxUKq-MtlSGp6y/scene.splinecode" />
+        {/* Spline Background - Only on Desktop for performance */}
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-primary/20 via-background to-blue-500/20">
+          {!isMobile && (
+            <Spline scene="https://prod.spline.design/Q2XxUKq-MtlSGp6y/scene.splinecode" />
+          )}
         </div>
         
         {/* Stronger Overlay for Light mode readability and Cinematic Depth */}
@@ -34,12 +47,15 @@ const Home = () => {
         
         {/* Hero Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center pointer-events-none animate-[fadeInUp_1s_ease-out]">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 drop-shadow-xl text-slate-900 dark:text-white">
+          <h1 className="text-gray-100 text-5xl md:text-7xl font-extrabold tracking-tight mb-6 drop-shadow-xl text-slate-900 dark:text-white">
             Plongez dans l'<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500 drop-shadow-lg">Avenir</span>
           </h1>
           <p className="text-gray-100 dark:text-gray-400 text-xl md:text-2xl mb-10 max-w-2xl mx-auto drop-shadow-md font-medium">
   Découvrez des articles fascinants, partagez vos idées et rejoignez une communauté de créateurs passionnés.
 </p>
+          {!isMobile && (
+            <Spline scene="https://prod.spline.design/Q2XxUKq-MtlSGp6y/scene.splinecode" />
+          )}
 
           <div className="flex items-center justify-center gap-4 pointer-events-auto">
             <Link to="/articles" className="px-10 py-5 bg-gradient-to-r from-primary to-blue-600 text-white rounded-full font-bold text-lg hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(139,92,246,0.3)] hover:shadow-[0_15px_40px_rgba(139,92,246,0.5)] flex items-center justify-center gap-3 group">
@@ -115,7 +131,7 @@ const Home = () => {
               <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1">
                 <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 relative overflow-hidden">
                   {article.coverImage ? (
-                    <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} />
+                    <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} loading="lazy" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-primary/30 font-bold text-4xl group-hover:scale-110 transition-transform duration-500">
                       {article.titre.substring(0, 2).toUpperCase()}

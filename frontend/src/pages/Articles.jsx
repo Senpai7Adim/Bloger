@@ -95,7 +95,7 @@ const Articles = () => {
               <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1">
                 <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 relative overflow-hidden">
                   {article.coverImage ? (
-                    <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} />
+                    <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} loading="lazy" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-primary/30 font-bold text-4xl group-hover:scale-110 transition-transform duration-500">
                       {article.titre.substring(0, 2).toUpperCase()}

@@ -26,6 +26,21 @@
   }
 
   body {
-    @apply bg-background text-foreground transition-colors duration-300 antialiased;
+    @apply bg-background text-foreground transition-colors duration-300 antialiased overflow-x-hidden;
+  }
+
+  /* Performance Optimizations */
+  section {
+    will-change: transform;
+  }
+
+  @media (max-width: 768px) {
+    .blur-3xl {
+      filter: blur(40px); /* Reduced from 64px for mobile performance */
+    }
+    
+    .animate-\[fadeInUp_1s_ease-out\] {
+      animation-duration: 0.6s; /* Snappier on mobile */
+    }
   }
 }
