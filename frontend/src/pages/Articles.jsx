@@ -92,7 +92,7 @@ const Articles = () => {
         ) : articles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map(article => (
-              <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1">
+              <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-[transform,shadow] duration-300 transform hover:-translate-y-1 will-change-transform">
                 <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 relative overflow-hidden">
                   {article.coverImage ? (
                     <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} />
@@ -101,7 +101,7 @@ const Articles = () => {
                       {article.titre.substring(0, 2).toUpperCase()}
                     </div>
                   )}
-                  <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-primary">
+                  <div className="absolute top-4 left-4 bg-background/80 px-3 py-1 rounded-full text-xs font-semibold text-primary shadow-sm">
                     {article.categorie}
                   </div>
                 </div>

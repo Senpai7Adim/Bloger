@@ -6,6 +6,16 @@ import api from '../utils/api';
 
 const Home = () => {
   const [featuredArticles, setFeaturedArticles] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     // Fetch latest 3 articles
@@ -23,11 +33,13 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Spline Background */}
-        <div className="absolute inset-0 w-full h-full">
-          <Spline scene="https://prod.spline.design/Q2XxUKq-MtlSGp6y/scene.splinecode" />
-        </div>
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-background to-blue-500/10">
+        {/* Spline Background - Only on Desktop */}
+        {!isMobile && (
+          <div className="absolute inset-0 w-full h-full">
+            <Spline scene="https://prod.spline.design/Q2XxUKq-MtlSGp6y/scene.splinecode" />
+          </div>
+        )}
         
         {/* Stronger Overlay for Light mode readability and Cinematic Depth */}
         {/*<div className="absolute inset-0 bg-white/60 dark:bg-background/70 backdrop-blur-[3px] pointer-events-none"></div>*/}
@@ -42,7 +54,7 @@ const Home = () => {
 </p>
 
           <div className="flex items-center justify-center gap-4 pointer-events-auto">
-            <Link to="/articles" className="px-10 py-5 bg-gradient-to-r from-primary to-blue-600 text-white rounded-full font-bold text-lg hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_30px_rgba(139,92,246,0.3)] hover:shadow-[0_15px_40px_rgba(139,92,246,0.5)] flex items-center justify-center gap-3 group">
+            <Link to="/articles" className="px-10 py-5 bg-gradient-to-r from-primary to-blue-600 text-white rounded-full font-bold text-lg hover:-translate-y-1 transition-[transform,shadow,opacity] duration-300 shadow-[0_10px_30px_rgba(139,92,246,0.3)] hover:shadow-[0_15px_40px_rgba(139,92,246,0.5)] flex items-center justify-center gap-3 group">
               Commencer l'Exploration <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </Link>
           </div>
@@ -66,7 +78,7 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="p-8 rounded-3xl bg-background border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div className="p-8 rounded-3xl bg-background border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-2 transition-[transform,shadow] duration-300 group will-change-transform">
               <div className="w-20 h-20 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 transform group-hover:rotate-6 transition-transform">
                 <BookOpen size={40} />
               </div>
@@ -75,7 +87,7 @@ const Home = () => {
                 Découvrez des analyses poussées, des tutoriels exclusifs et des posts passionnants rédigés par des experts.
               </p>
             </div>
-            <div className="p-8 rounded-3xl bg-background border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div className="p-8 rounded-3xl bg-background border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-2 transition-[transform,shadow] duration-300 group will-change-transform">
               <div className="w-20 h-20 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 transform group-hover:-rotate-6 transition-transform">
                 <Users size={40} />
               </div>
@@ -84,7 +96,7 @@ const Home = () => {
                 Connectez-vous avec d'autres passionnés, échangez en commentaires et faites grandir votre réseau.
               </p>
             </div>
-            <div className="p-8 rounded-3xl bg-background border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div className="p-8 rounded-3xl bg-background border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-2 transition-[transform,shadow] duration-300 group will-change-transform">
               <div className="w-20 h-20 bg-yellow-500/10 text-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-6 transform group-hover:rotate-6 transition-transform">
                 <Star size={40} />
               </div>
@@ -112,7 +124,7 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredArticles.map(article => (
-              <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 transform hover:-translate-y-1">
+              <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-[transform,shadow] duration-300 transform hover:-translate-y-1 will-change-transform">
                 <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 relative overflow-hidden">
                   {article.coverImage ? (
                     <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} />
@@ -121,7 +133,7 @@ const Home = () => {
                       {article.titre.substring(0, 2).toUpperCase()}
                     </div>
                   )}
-                  <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-primary">
+                  <div className="absolute top-4 left-4 bg-background/80 px-3 py-1 rounded-full text-xs font-semibold text-primary shadow-sm">
                     {article.categorie}
                   </div>
                 </div>

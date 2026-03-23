@@ -27,5 +27,17 @@
 
   body {
     @apply bg-background text-foreground transition-colors duration-300 antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Performance Utilities */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 }

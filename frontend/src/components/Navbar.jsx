@@ -9,7 +9,7 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/80 border-b border-gray-200 dark:border-gray-800">
+    <nav className="sticky top-0 z-50 w-full md:backdrop-blur-md bg-white dark:bg-slate-900 md:bg-background/80 border-b border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           
