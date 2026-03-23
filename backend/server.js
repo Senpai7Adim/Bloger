@@ -95,10 +95,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
 });
 
-// ─── Démarrage ───────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
-  console.log(`📚 Swagger UI disponible sur http://localhost:${PORT}/api-docs`);
-});
+// ─── Démarrage (Local only) ──────────────────────────────────────────────────
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+    console.log(`📚 Swagger UI disponible sur http://localhost:${PORT}/api-docs`);
+  });
+}
 
 export default app;
