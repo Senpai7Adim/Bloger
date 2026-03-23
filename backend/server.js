@@ -7,9 +7,10 @@ import connectDB from "./config/db.js";
 import swaggerSpec from "./config/swagger.js";
 import articleRoutes from "./routes/articleRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-import commentRouter from "./routes/commentRoutes.js";
 import { protect } from "./middleware/auth.js";
 import { deleteComment } from "./routes/commentRoutes.js";
+import path from "path";
+
 
 // ─── Connexion MongoDB ───────────────────────────────────────────────────────
 connectDB();
@@ -17,6 +18,7 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const __dirname = path.resolve();
 // ─── Middlewares globaux ─────────────────────────────────────────────────────
 app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
@@ -42,19 +44,47 @@ app.use("/api/articles", articleRoutes);
 // Standalone comment delete route
 app.delete("/api/comments/:id", protect, deleteComment);
 
-// ─── Route racine ────────────────────────────────────────────────────────────
-app.get("/", (req, res) => {
-  res.json({
-    message: "Bienvenue sur l'API Blog 🚀",
-    documentation: `http://localhost:${PORT}/api-docs`,
-    endpoints: {
-      auth: `http://localhost:${PORT}/api/auth`,
-      articles: `http://localhost:${PORT}/api/articles`,
-    },
+if (process.env.NODE_ENV !== "production") {
+  app.get("/", (req, res) => {
+    res.json({
+      message: "Bienvenue sur l'API Blog 🚀",
+      documentation: `http://localhost:${PORT}/api-docs`,
+      endpoints: {
+        auth: `http://localhost:${PORT}/api/auth`,
+        articles: `http://localhost:${PORT}/api/articles`,
+      },
+    });
   });
-});
+}
 
-// ─── 404 ─────────────────────────────────────────────────────────────────────
+// ─── Production Logic (Static Files & SPA) ──────────────────────────────────
+if (process.env.NODE_ENV === "production") {
+  const frontendPath = path.join(__dirname, "frontend", "dist");
+  app.use(express.static(frontendPath));
+  
+  app.use((req, res, next) => {
+    if (req.method === "GET" && !req.originalUrl.startsWith("/api")) {
+      return res.sendFile(path.resolve(frontendPath, "index.html"));
+    }
+    next();
+  });
+}
+
+// ─── Development Logic (Proxy to Vite) ──────────────────────────────────────
+else if (process.env.NODE_ENV !== "test") {
+  const { createProxyMiddleware } = await import("http-proxy-middleware");
+  app.use(
+    "/",
+    createProxyMiddleware({
+      target: "http://localhost:5173",
+      changeOrigin: true,
+      ws: true,
+      pathFilter: (pathname) => !pathname.startsWith("/api") && !pathname.startsWith("/api-docs"),
+    })
+  );
+}
+
+// ─── 404 (Fallthrough for Local Dev) ──────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ message: `Route ${req.originalUrl} introuvable` });
 });
@@ -70,3 +100,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
   console.log(`📚 Swagger UI disponible sur http://localhost:${PORT}/api-docs`);
 });
+
+export default app;
