@@ -4,11 +4,6 @@ Application de blog complète avec **React (Vite)** au front-end et **Node.js (E
 
 ---
 
-## 🔗GITHUB
-
-https://github.com/Senpai7Adim/Bloger.git
-
----
 
 ## 🚀 Installation & Démarrage Rapide
 
@@ -20,7 +15,7 @@ https://github.com/Senpai7Adim/Bloger.git
 Installer les dépendances à la racine (gère automatiquement le backend et le frontend) :
 
 ```bash
-git clone <url-du-repo>
+git clone https://github.com/Senpai7Adim/Bloger.git
 cd Articles
 npm install
 ```
