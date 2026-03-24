@@ -70,19 +70,8 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// ─── Development Logic (Proxy to Vite) ──────────────────────────────────────
-else if (process.env.NODE_ENV !== "test") {
-  const { createProxyMiddleware } = await import("http-proxy-middleware");
-  app.use(
-    "/",
-    createProxyMiddleware({
-      target: "http://localhost:5173",
-      changeOrigin: true,
-      ws: true,
-      pathFilter: (pathname) => !pathname.startsWith("/api") && !pathname.startsWith("/api-docs"),
-    })
-  );
-}
+// ─── Development Logic ──────────────────────────────────────────────────────
+// Next.js handles the frontend, backend only serves API
 
 // ─── 404 (Fallthrough for Local Dev) ──────────────────────────────────────────
 app.use((req, res) => {
@@ -95,12 +84,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Erreur interne du serveur", error: err.message });
 });
 
-// ─── Démarrage (Local only) ──────────────────────────────────────────────────
-if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
-    console.log(`📚 Swagger UI disponible sur http://localhost:${PORT}/api-docs`);
-  });
-}
+// ─── Démarrage ──────────────────────────────────────────────────────────────
+app.listen(PORT, () => {
+  console.log(`Server started on http://localhost:${PORT}`);
+  console.log(`Swagger UI available at http://localhost:${PORT}/api-docs`);
+});
 
 export default app;
