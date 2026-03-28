@@ -16,7 +16,7 @@ Installer les dépendances à la racine (gère automatiquement le backend et le 
 
 ```bash
 git clone https://github.com/Senpai7Adim/Bloger.git
-cd Articles
+cd Bloger
 npm install
 ```
 
