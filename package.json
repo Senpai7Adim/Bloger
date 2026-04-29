@@ -4,34 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node backend/server.js",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "NODE_ENV=development nodemon backend/server.js",
-    "dev:client": "npm run dev --prefix frontend",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
-    "preview": "vite preview"
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend"
   },
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "express-validator": "^7.3.1",
-    "http-proxy-middleware": "^3.0.5",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.3.1",
-    "nodemon": "^3.1.14",
-    "serverless-http": "^4.0.0",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1",
-    "vite": "^8.0.1"
-  },
-  "devDependencies": {
     "concurrently": "^9.2.1"
   }
 }

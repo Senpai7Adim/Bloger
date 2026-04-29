@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import Spline from '@splinetool/react-spline';
-import { ArrowRight, BookOpen, Users, Star } from 'lucide-react';
+import { ArrowRight, BookOpen, Users, Star, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
 
 const Home = () => {
   const [featuredArticles, setFeaturedArticles] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -25,6 +26,8 @@ const Home = () => {
         setFeaturedArticles(res.data.slice(0, 3));
       } catch (err) {
         console.error("Failed to load featured articles");
+      } finally {
+        setLoading(false);
       }
     };
     fetchArticles();
@@ -49,7 +52,7 @@ const Home = () => {
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 drop-shadow-xl text-slate-900 dark:text-white">
             Plongez dans l'<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500 drop-shadow-lg">Avenir</span>
           </h1>
-          <p className="text-gray-100 dark:text-gray-400 text-xl md:text-2xl mb-10 max-w-2xl mx-auto drop-shadow-md font-medium">
+          <p className="text-black dark:text-gray-400 text-xl md:text-2xl mb-10 max-w-2xl mx-auto drop-shadow-md font-medium">
   Découvrez des articles fascinants, partagez vos idées et rejoignez une communauté de créateurs passionnés.
 </p>
 
@@ -122,39 +125,45 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredArticles.map(article => (
-              <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-[transform,shadow] duration-300 transform hover:-translate-y-1 will-change-transform">
-                <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 relative overflow-hidden">
-                  {article.coverImage ? (
-                    <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-primary/30 font-bold text-4xl group-hover:scale-110 transition-transform duration-500">
-                      {article.titre.substring(0, 2).toUpperCase()}
+          {loading ? (
+            <div className="flex justify-center items-center h-48 w-full col-span-1 md:col-span-2 lg:col-span-3">
+              <Loader2 className="animate-spin text-primary" size={48} />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredArticles.map(article => (
+                <Link to={`/articles/${article._id}`} key={article._id} className="group flex flex-col bg-card border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-[transform,shadow] duration-300 transform hover:-translate-y-1 will-change-transform">
+                  <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-700 relative overflow-hidden">
+                    {article.coverImage ? (
+                      <img src={article.coverImage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={article.titre} />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-primary/30 font-bold text-4xl group-hover:scale-110 transition-transform duration-500">
+                        {article.titre.substring(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="absolute top-4 left-4 bg-background/80 px-3 py-1 rounded-full text-xs font-semibold text-primary shadow-sm">
+                      {article.categorie}
                     </div>
-                  )}
-                  <div className="absolute top-4 left-4 bg-background/80 px-3 py-1 rounded-full text-xs font-semibold text-primary shadow-sm">
-                    {article.categorie}
                   </div>
-                </div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">{article.titre}</h3>
-                  <p className="text-foreground/70 text-sm mb-4 line-clamp-3 flex-1">{article.contenu}</p>
-                  
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-gray-800/50">
-                    <div className="flex items-center gap-2">
-                       {article.auteur?.avatar ? 
-                          <img src={article.auteur.avatar} className="w-6 h-6 rounded-full" /> : 
-                          <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">{article.auteur?.name?.charAt(0)}</div>
-                       }
-                      <span className="text-sm font-medium">{article.auteur?.name}</span>
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">{article.titre}</h3>
+                    <p className="text-foreground/70 text-sm mb-4 line-clamp-3 flex-1">{article.contenu}</p>
+                    
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-gray-800/50">
+                      <div className="flex items-center gap-2">
+                         {article.auteur?.avatar ? 
+                            <img src={article.auteur.avatar} className="w-6 h-6 rounded-full" /> : 
+                            <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">{article.auteur?.name?.charAt(0)}</div>
+                         }
+                        <span className="text-sm font-medium">{article.auteur?.name}</span>
+                      </div>
+                      <span className="text-xs text-foreground/50">{new Date(article.date).toLocaleDateString()}</span>
                     </div>
-                    <span className="text-xs text-foreground/50">{new Date(article.date).toLocaleDateString()}</span>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          )}
           
           <div className="mt-8 text-center sm:hidden">
             <Link to="/articles" className="inline-flex items-center text-primary font-medium hover:underline">
